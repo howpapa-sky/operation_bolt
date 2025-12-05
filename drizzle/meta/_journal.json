@@ -29,6 +29,13 @@
       "when": 1764900344301,
       "tag": "0003_tired_paibok",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1764908782367,
+      "tag": "0004_smart_nicolaos",
+      "breakpoints": true
     }
   ]
 }

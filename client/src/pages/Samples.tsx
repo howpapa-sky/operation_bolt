@@ -94,13 +94,19 @@ export default function Samples() {
         (p) =>
           p.name?.toLowerCase().includes(query) ||
           p.sampleCode?.toLowerCase().includes(query) ||
-          p.projectSubtype?.toLowerCase().includes(query)
+          (Array.isArray(p.projectSubtypes)
+            ? p.projectSubtypes.some((subtype: string) => subtype.toLowerCase().includes(query))
+            : false)
       );
     }
 
     // 샘플 종류 필터
     if (sampleTypeFilter !== "전체") {
-      filtered = filtered.filter((p) => p.projectSubtype === sampleTypeFilter);
+      filtered = filtered.filter((p) =>
+        Array.isArray(p.projectSubtypes)
+          ? p.projectSubtypes.includes(sampleTypeFilter)
+          : false
+      );
     }
 
     // 상태 필터
@@ -282,7 +288,9 @@ export default function Samples() {
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">샘플 종류</span>
                       <span className="font-medium">
-                        {project.projectSubtype || "-"}
+                        {Array.isArray(project.projectSubtypes) && project.projectSubtypes.length > 0
+                          ? project.projectSubtypes.join(", ")
+                          : "-"}
                       </span>
                     </div>
                     <div className="flex justify-between">

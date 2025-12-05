@@ -19,6 +19,8 @@ export default function Projects() {
     type: "샘플링" as "샘플링" | "인플루언서" | "제품발주" | "상세페이지",
     description: "",
     priority: "보통" as "높음" | "보통" | "낮음",
+    projectSubtypes: [] as string[],
+    packagingTypes: [] as string[],
   });
 
   const utils = trpc.useUtils();
@@ -27,7 +29,7 @@ export default function Projects() {
     onSuccess: () => {
       utils.projects.list.invalidate();
       setOpen(false);
-      setFormData({ name: "", type: "샘플링", description: "", priority: "보통" });
+      setFormData({ name: "", type: "샘플링", description: "", priority: "보통", projectSubtypes: [], packagingTypes: [] });
       toast.success("프로젝트가 생성되었습니다");
     },
     onError: (error) => {
@@ -126,6 +128,52 @@ export default function Projects() {
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     rows={3}
                   />
+                </div>
+
+                <div>
+                  <Label>세부 유형 (다중 선택 가능)</Label>
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    {["크림", "토너패드", "앤플", "로션", "미스트", "선케어", "파우더"].map((subtype) => (
+                      <label key={subtype} className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.projectSubtypes.includes(subtype)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setFormData({ ...formData, projectSubtypes: [...formData.projectSubtypes, subtype] });
+                            } else {
+                              setFormData({ ...formData, projectSubtypes: formData.projectSubtypes.filter((s) => s !== subtype) });
+                            }
+                          }}
+                          className="rounded border-gray-300"
+                        />
+                        <span className="text-sm">{subtype}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <Label>부자재 유형 (다중 선택 가능)</Label>
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    {["용기", "라벨", "단상자", "포장지"].map((packaging) => (
+                      <label key={packaging} className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.packagingTypes.includes(packaging)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setFormData({ ...formData, packagingTypes: [...formData.packagingTypes, packaging] });
+                            } else {
+                              setFormData({ ...formData, packagingTypes: formData.packagingTypes.filter((p) => p !== packaging) });
+                            }
+                          }}
+                          className="rounded border-gray-300"
+                        />
+                        <span className="text-sm">{packaging}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="flex justify-end gap-2">

@@ -130,6 +130,32 @@ export default function ProjectDetail() {
                 </div>
               )}
 
+              {project.projectSubtypes && Array.isArray(project.projectSubtypes) && project.projectSubtypes.length > 0 ? (
+                <div>
+                  <label className="text-sm font-medium">세부 유형</label>
+                  <div className="mt-1 flex flex-wrap gap-2">
+                    {project.projectSubtypes.map((subtype: string) => (
+                      <span key={subtype} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        {subtype}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
+              {project.packagingTypes && Array.isArray(project.packagingTypes) && project.packagingTypes.length > 0 ? (
+                <div>
+                  <label className="text-sm font-medium">부자재 유형</label>
+                  <div className="mt-1 flex flex-wrap gap-2">
+                    {project.packagingTypes.map((packaging: string) => (
+                      <span key={packaging} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        {packaging}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
               {project.startDate && (
                 <div className="flex items-center gap-2 text-sm">
                   <Calendar className="h-4 w-4 text-muted-foreground" />

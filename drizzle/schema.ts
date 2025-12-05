@@ -38,7 +38,8 @@ export const projects = mysqlTable("projects", {
   manufacturer: varchar("manufacturer", { length: 255 }), // 제조사
   round: int("round"), // 회차
   sampleCode: varchar("sampleCode", { length: 100 }), // 샘플 코드
-  projectSubtype: varchar("projectSubtype", { length: 100 }), // 세부 유형: 크림, 토너패드, 앰플, 로션, 미스트 등
+  projectSubtypes: json("projectSubtypes"), // 세부 유형 배열: ["크림", "토너패드", "앤플", "로션", "미스트" 등]
+  packagingTypes: json("packagingTypes"), // 부자재 유형 배열: ["단상자", "용기", "라벨", "포장지" 등]
   evaluationScores: json("evaluationScores"), // 평가 점수 JSON
   evaluatorId: int("evaluatorId"), // 평가자 userId
   evaluationComment: text("evaluationComment"), // 평가 코멘트

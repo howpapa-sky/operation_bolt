@@ -186,7 +186,19 @@ export default function SampleDetail() {
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-muted-foreground">샘플 종류:</span>
-                  <span className="font-medium">{project.projectSubtype || "-"}</span>
+                  <span className="font-medium">
+                    {Array.isArray(project.projectSubtypes) && project.projectSubtypes.length > 0
+                      ? project.projectSubtypes.join(", ")
+                      : "-"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-muted-foreground">부자재:</span>
+                  <span className="font-medium">
+                    {Array.isArray(project.packagingTypes) && project.packagingTypes.length > 0
+                      ? project.packagingTypes.join(", ")
+                      : "-"}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-muted-foreground">회차:</span>

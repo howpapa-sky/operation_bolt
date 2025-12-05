@@ -46,6 +46,8 @@ export const appRouter = router({
         startDate: z.date().optional(),
         dueDate: z.date().optional(),
         assignedTo: z.number().optional(),
+        projectSubtypes: z.array(z.string()).optional(),
+        packagingTypes: z.array(z.string()).optional(),
       }))
       .mutation(async ({ input, ctx }) => {
         return await db.createProject({
