@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, json } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -33,6 +33,14 @@ export const projects = mysqlTable("projects", {
   completedDate: timestamp("completedDate"),
   assignedTo: int("assignedTo"), // userId
   createdBy: int("createdBy").notNull(), // userId
+  // 샘플 관리 전용 필드
+  brand: varchar("brand", { length: 255 }), // 브랜드명
+  manufacturer: varchar("manufacturer", { length: 255 }), // 제조사
+  round: int("round"), // 회차
+  sampleCode: varchar("sampleCode", { length: 100 }), // 샘플 코드
+  projectSubtype: varchar("projectSubtype", { length: 100 }), // 세부 유형: 크림, 토너패드, 앰플, 로션, 미스트 등
+  evaluationScores: json("evaluationScores"), // 평가 점수 JSON
+  evaluatorId: int("evaluatorId"), // 평가자 userId
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

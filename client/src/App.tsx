@@ -13,6 +13,7 @@ import Sales from "./pages/Sales";
 import Ads from "./pages/Ads";
 import Automation from "./pages/Automation";
 import Dashboard from "./pages/Dashboard";
+import Samples from "./pages/Samples";
 
 function Router() {
   return (
@@ -26,6 +27,7 @@ function Router() {
       <Route path={"/sales"} component={Sales} />
       <Route path={"/ads"} component={Ads} />
       <Route path={"/automation"} component={Automation} />
+      <Route path={"/samples"} component={Samples} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

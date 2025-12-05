@@ -15,6 +15,13 @@
       "when": 1764030103125,
       "tag": "0001_puzzling_mulholland_black",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1764847332003,
+      "tag": "0002_stale_annihilus",
+      "breakpoints": true
     }
   ]
 }
