@@ -54,3 +54,18 @@
 - [ ] 보안 점검
 - [ ] 사용자 가이드 작성
 - [ ] 프로덕션 배포
+
+## Phase 9: 샘플 관리 모듈
+- [x] 데이터베이스 스키마 확장 (brand, manufacturer, round, sampleCode, projectSubtype, evaluationScores, evaluatorId)
+- [x] 샘플 관리 페이지 구현
+- [x] 검색 기능 (프로젝트 이름/샘플 코드/세부 유형)
+- [x] 필터 기능 (샘플 종류/상태/우선순위)
+- [x] 평균 평점 계산 및 색상 코딩
+- [x] 정렬 기능 (최신순/평점순)
+- [x] DashboardLayout 적용
+- [x] 샘플 상세 페이지 구현
+- [x] 평가 점수 상세 내역 표시 (texture, absorption, scent, packaging, effectiveness)
+- [x] 평가 코멘트 필드 추가 및 표시
+- [x] 첨부 이미지 필드 추가 및 갤러리 구현
+- [x] 평가 점수 시각화 (프로그레스 바)
+- [x] 샘플 카드 클릭 시 상세 페이지 라우팅

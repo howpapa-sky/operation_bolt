@@ -41,6 +41,8 @@ export const projects = mysqlTable("projects", {
   projectSubtype: varchar("projectSubtype", { length: 100 }), // 세부 유형: 크림, 토너패드, 앰플, 로션, 미스트 등
   evaluationScores: json("evaluationScores"), // 평가 점수 JSON
   evaluatorId: int("evaluatorId"), // 평가자 userId
+  evaluationComment: text("evaluationComment"), // 평가 코멘트
+  attachedImages: json("attachedImages"), // 첨부 이미지 URL 배열 JSON
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

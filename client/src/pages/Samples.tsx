@@ -254,7 +254,7 @@ export default function Samples() {
                 <Card
                   key={project.id}
                   className="hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => setLocation(`/projects/${project.id}`)}
+                  onClick={() => setLocation(`/samples/${project.id}`)}
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between gap-2 mb-2">
