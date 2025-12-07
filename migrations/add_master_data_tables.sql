@@ -139,9 +139,9 @@ ON CONFLICT (name) DO NOTHING;
 
 -- 기본 제조사 데이터 삽입
 INSERT INTO manufacturers (name) VALUES 
-  ('콜마', '한국콜마'),
-  ('코스맥스', '코스맥스'),
-  ('기타', '기타 제조사')
+  ('콜마'),
+  ('코스맥스'),
+  ('기타')
 ON CONFLICT (name) DO NOTHING;
 
 -- 인덱스 생성
