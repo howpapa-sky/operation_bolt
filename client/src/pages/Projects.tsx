@@ -156,7 +156,7 @@ export default function Projects() {
                 <div>
                   <Label>부자재 유형 (다중 선택 가능)</Label>
                   <div className="grid grid-cols-2 gap-2 mt-2">
-                    {["용기", "라벨", "단상자", "포장지"].map((packaging) => (
+                    {["용기", "라벨", "단상자", "포장지", "우창이노팩", "크릭", "영동프라텍", "럭스팩"].map((packaging) => (
                       <label key={packaging} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
