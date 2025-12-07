@@ -2,6 +2,7 @@ import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, json } f
 
 /**
  * Core user table backing auth flow.
+ * 역할에 manager 추가
  */
 export const users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
@@ -9,7 +10,7 @@ export const users = mysqlTable("users", {
   name: text("name"),
   email: varchar("email", { length: 320 }),
   loginMethod: varchar("loginMethod", { length: 64 }),
-  role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+  role: mysqlEnum("role", ["user", "manager", "admin"]).default("user").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
@@ -19,37 +20,212 @@ export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
 /**
- * Projects table - 제품 개발 프로젝트 관리
+ * Brands - 브랜드 관리
  */
-export const projects = mysqlTable("projects", {
+export const brands = mysqlTable("brands", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull().unique(),
+  description: text("description"),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Brand = typeof brands.$inferSelect;
+export type InsertBrand = typeof brands.$inferInsert;
+
+/**
+ * Categories - 카테고리 관리
+ */
+export const categories = mysqlTable("categories", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull().unique(),
+  type: mysqlEnum("type", ["화장품", "부자재"]).notNull(),
+  description: text("description"),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Category = typeof categories.$inferSelect;
+export type InsertCategory = typeof categories.$inferInsert;
+
+/**
+ * Manufacturers - 제조사 관리
+ */
+export const manufacturers = mysqlTable("manufacturers", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull().unique(),
+  contact: varchar("contact", { length: 100 }),
+  email: varchar("email", { length: 320 }),
+  phone: varchar("phone", { length: 50 }),
+  address: text("address"),
+  notes: text("notes"),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Manufacturer = typeof manufacturers.$inferSelect;
+export type InsertManufacturer = typeof manufacturers.$inferInsert;
+
+/**
+ * Vendors - 제작 업체 관리
+ */
+export const vendors = mysqlTable("vendors", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull().unique(),
+  type: mysqlEnum("type", ["상세페이지", "디자인", "촬영", "기타"]).notNull(),
+  contact: varchar("contact", { length: 100 }),
+  email: varchar("email", { length: 320 }),
+  phone: varchar("phone", { length: 50 }),
+  notes: text("notes"),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Vendor = typeof vendors.$inferSelect;
+export type InsertVendor = typeof vendors.$inferInsert;
+
+/**
+ * Sellers - 셀러 관리
+ */
+export const sellers = mysqlTable("sellers", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull().unique(),
+  platform: varchar("platform", { length: 100 }),
+  contact: varchar("contact", { length: 100 }),
+  email: varchar("email", { length: 320 }),
+  phone: varchar("phone", { length: 50 }),
+  notes: text("notes"),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Seller = typeof sellers.$inferSelect;
+export type InsertSeller = typeof sellers.$inferInsert;
+
+/**
+ * Evaluators - 평가자 관리
+ */
+export const evaluators = mysqlTable("evaluators", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
-  type: mysqlEnum("type", ["샘플링", "인플루언서", "제품발주", "상세페이지"]).notNull(),
+  email: varchar("email", { length: 320 }),
+  phone: varchar("phone", { length: 50 }),
+  specialty: varchar("specialty", { length: 255 }),
+  notes: text("notes"),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Evaluator = typeof evaluators.$inferSelect;
+export type InsertEvaluator = typeof evaluators.$inferInsert;
+
+/**
+ * Evaluation Criteria - 평가 항목 관리
+ */
+export const evaluationCriteria = mysqlTable("evaluation_criteria", {
+  id: int("id").autoincrement().primaryKey(),
+  categoryId: int("categoryId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  displayOrder: int("displayOrder").default(0),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EvaluationCriterion = typeof evaluationCriteria.$inferSelect;
+export type InsertEvaluationCriterion = typeof evaluationCriteria.$inferInsert;
+
+/**
+ * Projects table - 통합 프로젝트 관리
+ */
+export const projects = mysqlTable("projects", {
+  // 기본 정보
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  type: mysqlEnum("type", [
+    "샘플링",
+    "상세페이지",
+    "인플루언서",
+    "제품발주",
+    "공동구매",
+    "기타"
+  ]).notNull(),
+  
+  // 공통 프로젝트 속성
   status: mysqlEnum("status", ["진행전", "진행중", "완료", "보류"]).default("진행전").notNull(),
   priority: mysqlEnum("priority", ["높음", "보통", "낮음"]).default("보통"),
   description: text("description"),
+  notes: text("notes"),
+  
+  // 날짜 관리
   startDate: timestamp("startDate"),
   dueDate: timestamp("dueDate"),
   completedDate: timestamp("completedDate"),
-  assignedTo: int("assignedTo"), // userId
-  createdBy: int("createdBy").notNull(), // userId
-  // 샘플 관리 전용 필드
-  brand: varchar("brand", { length: 255 }), // 브랜드명
-  manufacturer: varchar("manufacturer", { length: 255 }), // 제조사
-  round: int("round"), // 회차
-  sampleCode: varchar("sampleCode", { length: 100 }), // 샘플 코드
-  projectSubtypes: json("projectSubtypes"), // 세부 유형 배열: ["크림", "토너패드", "앤플", "로션", "미스트" 등]
-  packagingTypes: json("packagingTypes"), // 부자재 유형 배열: ["단상자", "용기", "라벨", "포장지" 등]
-  evaluationScores: json("evaluationScores"), // 평가 점수 JSON
-  evaluatorId: int("evaluatorId"), // 평가자 userId
-  evaluationComment: text("evaluationComment"), // 평가 코멘트
-  attachedImages: json("attachedImages"), // 첨부 이미지 URL 배열 JSON
+  
+  // 담당자
+  assignedTo: int("assignedTo"),
+  createdBy: int("createdBy").notNull(),
+  
+  // === 샘플링 전용 필드 ===
+  brandId: int("brandId"),
+  categoryId: int("categoryId"),
+  manufacturerId: int("manufacturerId"),
+  sampleCode: varchar("sampleCode", { length: 100 }),
+  round: int("round"),
+  evaluations: json("evaluations"), // [{ evaluatorId, scores: {criterionId: score}, comment, evaluatedAt }]
+  
+  // === 상세페이지 제작 전용 필드 ===
+  productName: varchar("productName", { length: 255 }),
+  vendorId: int("vendorId"),
+  workType: mysqlEnum("workType", ["신규", "리뉴얼"]),
+  includesPhotography: boolean("includesPhotography").default(false),
+  includesPlanning: boolean("includesPlanning").default(false),
+  budget: int("budget"),
+  
+  // === 인플루언서 협업 전용 필드 ===
+  collaborationType: mysqlEnum("collaborationType", ["제품협찬", "유가콘텐츠"]),
+  
+  // === 제품 발주 전용 필드 ===
+  containerMaterialId: int("containerMaterialId"),
+  boxMaterialId: int("boxMaterialId"),
+  
+  // === 공동구매 전용 필드 ===
+  sellerId: int("sellerId"),
+  revenue: int("revenue"),
+  contributionProfit: int("contributionProfit"),
+  
+  // 파일 첨부
+  attachedFiles: json("attachedFiles"),
+  
+  // 타임스탬프
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
 export type Project = typeof projects.$inferSelect;
 export type InsertProject = typeof projects.$inferInsert;
+
+/**
+ * Project Comments - 프로젝트 코멘트
+ */
+export const projectComments = mysqlTable("project_comments", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  userId: int("userId").notNull(),
+  comment: text("comment").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectComment = typeof projectComments.$inferSelect;
+export type InsertProjectComment = typeof projectComments.$inferInsert;
 
 /**
  * Project tasks - 프로젝트 내 세부 작업
@@ -61,8 +237,8 @@ export const projectTasks = mysqlTable("project_tasks", {
   description: text("description"),
   status: mysqlEnum("status", ["대기", "진행중", "완료", "보류"]).default("대기").notNull(),
   priority: mysqlEnum("priority", ["높음", "보통", "낮음"]).default("보통"),
-  assignedTo: int("assignedTo"), // userId
-  dependsOn: int("dependsOn"), // taskId - 선행 작업
+  assignedTo: int("assignedTo"),
+  dependsOn: int("dependsOn"),
   dueDate: timestamp("dueDate"),
   completedDate: timestamp("completedDate"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -79,11 +255,11 @@ export const influencers = mysqlTable("influencers", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   instagramHandle: varchar("instagramHandle", { length: 255 }),
-  instagramId: varchar("instagramId", { length: 255 }), // Instagram user ID for API
+  instagramId: varchar("instagramId", { length: 255 }),
   email: varchar("email", { length: 320 }),
   phone: varchar("phone", { length: 50 }),
   followerCount: int("followerCount"),
-  category: varchar("category", { length: 100 }), // 뷰티, 라이프스타일 등
+  category: varchar("category", { length: 100 }),
   notes: text("notes"),
   status: mysqlEnum("status", ["활성", "비활성", "계약종료"]).default("활성").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -102,7 +278,7 @@ export const influencerCampaigns = mysqlTable("influencer_campaigns", {
   projectId: int("projectId"),
   campaignName: varchar("campaignName", { length: 255 }).notNull(),
   productName: varchar("productName", { length: 255 }),
-  contractAmount: int("contractAmount"), // 계약 금액 (원)
+  contractAmount: int("contractAmount"),
   postType: mysqlEnum("postType", ["피드", "릴스", "스토리", "기타"]),
   postUrl: varchar("postUrl", { length: 500 }),
   postDate: timestamp("postDate"),
@@ -129,8 +305,8 @@ export const salesData = mysqlTable("sales_data", {
   orderDate: timestamp("orderDate").notNull(),
   productName: varchar("productName", { length: 255 }),
   quantity: int("quantity").notNull(),
-  unitPrice: int("unitPrice").notNull(), // 단가 (원)
-  totalAmount: int("totalAmount").notNull(), // 총 금액 (원)
+  unitPrice: int("unitPrice").notNull(),
+  totalAmount: int("totalAmount").notNull(),
   status: mysqlEnum("status", ["주문완료", "배송중", "배송완료", "취소", "환불"]).notNull(),
   syncedAt: timestamp("syncedAt").defaultNow().notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -148,12 +324,12 @@ export const adCampaigns = mysqlTable("ad_campaigns", {
   campaignId: varchar("campaignId", { length: 255 }).notNull(),
   campaignName: varchar("campaignName", { length: 255 }).notNull(),
   date: timestamp("date").notNull(),
-  impressions: int("impressions"), // 노출수
-  clicks: int("clicks"), // 클릭수
-  spend: int("spend"), // 지출 (원)
-  conversions: int("conversions"), // 전환수
-  revenue: int("revenue"), // 매출 (원)
-  roas: int("roas"), // ROAS (%) - stored as integer (e.g., 250 = 250%)
+  impressions: int("impressions"),
+  clicks: int("clicks"),
+  spend: int("spend"),
+  conversions: int("conversions"),
+  revenue: int("revenue"),
+  roas: int("roas"),
   syncedAt: timestamp("syncedAt").defaultNow().notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
@@ -169,9 +345,9 @@ export const automationRules = mysqlTable("automation_rules", {
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description"),
   triggerType: mysqlEnum("triggerType", ["시간", "이벤트", "조건"]).notNull(),
-  triggerConfig: text("triggerConfig"), // JSON string
+  triggerConfig: text("triggerConfig"),
   actionType: mysqlEnum("actionType", ["이메일", "알림", "태스크생성", "리포트"]).notNull(),
-  actionConfig: text("actionConfig"), // JSON string
+  actionConfig: text("actionConfig"),
   isActive: boolean("isActive").default(true).notNull(),
   lastRun: timestamp("lastRun"),
   createdBy: int("createdBy").notNull(),
@@ -192,7 +368,7 @@ export const notifications = mysqlTable("notifications", {
   title: varchar("title", { length: 255 }).notNull(),
   message: text("message"),
   isRead: boolean("isRead").default(false).notNull(),
-  relatedType: varchar("relatedType", { length: 50 }), // project, influencer, sales, ad
+  relatedType: varchar("relatedType", { length: 50 }),
   relatedId: int("relatedId"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
