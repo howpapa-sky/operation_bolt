@@ -11,7 +11,7 @@ Netlify 대시보드에서 다음 환경 변수를 설정해야 합니다:
 
    ```
    VITE_SUPABASE_URL=https://qxwyrgludqantaagukey.supabase.co
-   VITE_SUPABASE_ANON_KEY=<Supabase Anon Key>
+   VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4d3lyZ2x1ZHFhbnRhYWd1a2V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM1NTM0NTIsImV4cCI6MjA3OTEyOTQ1Mn0.KkDDXWOJ7l-cEauIXv_navgfCcdLCwBnn0ZGBHzUfvw
    ```
 
 3. **Supabase Anon Key 확인 방법**
