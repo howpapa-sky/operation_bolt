@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: howpapa-api
+    env: node
+    region: singapore
+    plan: free
+    buildCommand: pnpm install && pnpm run build
+    startCommand: pnpm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: SUPABASE_URL
+        value: https://qxwyrgludqantaagukey.supabase.co
+      - key: SUPABASE_KEY
+        sync: false
+      - key: PORT
+        value: 10000
