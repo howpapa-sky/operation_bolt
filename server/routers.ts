@@ -5,10 +5,12 @@ import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import * as db from "./db";
 import { masterDataRouter } from "./routers-master-data";
+import { projectsRouter } from "./routers-projects";
 
 export const appRouter = router({
   system: systemRouter,
   masterData: masterDataRouter,
+  projectsNew: projectsRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
