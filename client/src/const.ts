@@ -8,6 +8,13 @@ export const APP_LOGO = "https://placehold.co/128x128/E1E7EF/1F2937?text=App";
 export const getLoginUrl = () => {
   const oauthPortalUrl = import.meta.env.VITE_OAUTH_PORTAL_URL;
   const appId = import.meta.env.VITE_APP_ID;
+  
+  // 환경 변수가 없으면 빈 문자열 반환 (Netlify 배포 시 오류 방지)
+  if (!oauthPortalUrl || !appId) {
+    console.warn('OAuth 환경 변수가 설정되지 않았습니다.');
+    return '#';
+  }
+  
   const redirectUri = `${window.location.origin}/api/oauth/callback`;
   const state = btoa(redirectUri);
 
